@@ -7,7 +7,6 @@ import requests
 import streamlit as st
 import yfinance as yf
 from bs4 import BeautifulSoup
-from dotenv import load_dotenv
 from langchain import LLMChain
 from langchain.prompts import PromptTemplate
 from langchain_community.chat_models import ChatOpenAI
@@ -130,10 +129,6 @@ def selecionar_funcao_baixar_noticias():
         return ultimos_dias("ultimos_7_dias")
 
 
-# Chave de API do OpenAI
-load_dotenv()
-
-
 # Função para gerar respostas do chatbot
 def gerar_resposta(input_text):
     news_text = selecionar_funcao_baixar_noticias()
@@ -145,7 +140,11 @@ def gerar_resposta(input_text):
         db = FAISS.from_documents(documents, embeddings)
 
         # Iniciar ChatOpenAI
-        llm = ChatOpenAI(temperature=0.45, model="gpt-4o")
+        llm = ChatOpenAI(
+            temperature=0.45,
+            model="gpt-4o",
+            api_key="sk-proj-SNfISpAxf7dEa2ZnnQoPT3BlbkFJPhK3QyVHVCYBcpNrfgVP",
+        )
 
         template = """
                     Você é um investidor/jornalista especializado em escrever artigos sobre o mercado de investimentos. Seu foco abrange ações, fundos imobiliários, criptomoedas, fundos de investimento, Tesouro Direto, debêntures, ETFs (Exchange Traded Funds), imóveis e fundos imobiliários (FIIs), CDI, CDB, poupança, taxa de juros, SELIC, entre outros investimentos. Seu papel é responder perguntas sobre o mercado de forma clara, detalhada e baseada em dados e notícias atuais.
