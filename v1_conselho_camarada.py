@@ -298,21 +298,19 @@ with tab2:
                 labels={"Date": "Data", "Close": " R$ Preço", "Nome": "Ação"},
             )
             st.plotly_chart(fig)
-            # Agregando os dados para criar o gráfico de barras
-            volume_agg = dados.groupby(["Date", "Nome"], as_index=False)["Volume"].sum()
-            fig_volume = px.bar(
-                volume_agg,
-                x="Date",
-                y="Volume",
-                color="Nome",
-                title="Volume de Ações Negociadas",
-                labels={
-                    "Date": "Data",
-                    "Volume": "Volume de Negociações",
-                    "Nome": "Empresa",
-                },
+
+            # Criando o gráfico de barras
+            fig = px.bar(dados, x="Date", y="Volume", color="Nome", barmode="group")
+
+            # Adicionando título e rótulos aos eixos
+            fig.update_layout(
+                title="Volume de Negociações por Data e Empresa",
+                xaxis_title="Data",
+                yaxis_title="Volume de Negociações",
             )
-            st.plotly_chart(fig_volume)
+
+            # Exibindo o gráfico no Streamlit
+            st.plotly_chart(fig)
 
         with col2:
             # Criar o gráfico de candlestick
