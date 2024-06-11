@@ -214,9 +214,7 @@ with tab1:
 
 with tab2:
     col1, col2 = st.columns(2)
-    df = pd.read_csv(
-        r"C:\Users\sensix\Desktop\PESSOAL\PESSOAL\PORTIFOLIO DATA SCIENCE\conselho_camarada\ativos.csv"
-    )
+    df = pd.read_csv("ativos.csv")
 
     acoes = df["Valor"].unique().tolist()
 
