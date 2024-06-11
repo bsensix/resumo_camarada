@@ -8,3 +8,5 @@ langchain-text-splitters==0.2.0
 pandas==1.5.3
 requests==2.31.0
 yfinance==0.2.38
+plotly==5.9.0
+beautifulsoup4==4.12.2
