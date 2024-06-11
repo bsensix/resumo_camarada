@@ -299,7 +299,7 @@ with tab2:
             )
             st.plotly_chart(fig)
             # Agregando os dados para criar o gráfico de barras
-            volume_agg = dados.groupby(["Date", "Nome"])["Volume"].sum().reset_index()
+            volume_agg = dados.groupby(["Date", "Nome"], as_index=False)["Volume"].sum()
             fig_volume = px.bar(
                 volume_agg,
                 x="Date",
