@@ -95,6 +95,7 @@ def ultimos_dias(periodo):
         data_formatada = dia.strftime("%d%m%Y")
         noticias_dia = baixar_noticias_por_data(data_formatada)
         if noticias_dia:
+            noticias_dia = noticias_dia[:6000]
             noticias += f"Notícias de {dia.strftime('%d/%m/%Y')}:\n\n{noticias_dia}\n\n"
 
     if noticias:
@@ -125,12 +126,9 @@ mode = st.sidebar.radio("📰 Notícias:", options=["Hoje", "Últimos dias"], in
 def selecionar_funcao_baixar_noticias():
     if mode == "Hoje":
         return baixar_noticias()
-    elif mode == "Ultimos dias":
+    elif mode == "Últimos dias":
         return ultimos_dias("ultimos_7_dias")
 
-
-# Lidando com a interação do usuário com o chatbot
-chat_input = st.chat_input("Digite aqui!")
 
 # Chave de API do OpenAI
 load_dotenv()
@@ -149,26 +147,31 @@ def gerar_resposta(input_text):
         # Iniciar ChatOpenAI
         llm = ChatOpenAI(temperature=0.45, model="gpt-4o")
 
-        # Definir template para as respostas
         template = """
-        Você é um investidor/jornalista que escreve artigos sobre o mercado de investimentos de ações, 
-        fundos imobiliarios, cripto moedas, Fundos de investimento , Tesouro Direto, Debêntures
-        ETFs (Exchange Traded Funds), Imóveis e fundos imobiliários (FIIs), CDI , CDB , poupança, taxa de juros, SELIC,
-        entre outros investimentos, você recebe perguntas de como está o mercado no geral e tentar resumir que 
-        forma simples e detalhada sobre o que está acontecendo com dados e noticias.
+                    Você é um investidor/jornalista especializado em escrever artigos sobre o mercado de investimentos. Seu foco abrange ações, fundos imobiliários, criptomoedas, fundos de investimento, Tesouro Direto, debêntures, ETFs (Exchange Traded Funds), imóveis e fundos imobiliários (FIIs), CDI, CDB, poupança, taxa de juros, SELIC, entre outros investimentos. Seu papel é responder perguntas sobre o mercado de forma clara, detalhada e baseada em dados e notícias atuais.
+                    Público-Alvo:Suas respostas devem ser acessíveis tanto para investidores iniciantes quanto para experientes.
 
-        Aqui está perguntas que pessoas vão fazer para você.
-        {message}
+                    Instruções
+                    Formato das Respostas:
 
-        E aqui tenho as principais noticias do dia sobre o mercado de investimentos, organizadas por hora.
-        {resume}
+                    Perguntas Diretas: Forneça respostas curtas e objetivas, explicando brevemente o motivo da alta ou baixa de uma ação ou cotação de moedas, como o dólar.
+                    Desempenho Diário: Resuma o desempenho do mercado e da bolsa de valores em até 7 linhas, oferecendo detalhes suficientes sem se estender demais.
+                    Estrutura da Resposta:
 
-        Para perguntas mais diretas como qual ação teve o melhor ou pior desempenho você deve gerar respostar mais curtas
-        e objetivas, apenas explicando o por que da alta ou baixa. 
-        Isso também serve para perguntas de cotações de moedas como o dolar.
-        Para perguntas de como foi o dia, como foi o desempenho da bolsa você pode fornecer mais detalhes 
-        mais não passar uma resposta com mais de 7 linhas.
-        """
+                    Use dados e notícias recentes para embasar suas respostas.
+                    Para perguntas mais amplas, como o estado geral do mercado, forneça uma visão detalhada mas concisa.
+                    Exemplos de Resposta:
+
+                    Pergunta: "Qual foi a ação com o melhor desempenho hoje?"
+                    Resposta: "A ação X teve o melhor desempenho hoje devido a [motivo], resultando em uma alta de [percentual]."
+                    Aqui está perguntas que pessoas vão fazer para você.
+                    {message}
+
+                  E aqui tenho as principais noticias do dia sobre o mercado de investimentos, organizadas por hora.
+                    {resume}
+
+                    """
+
         prompt_template = PromptTemplate(
             input_variables=["message", "resume"], template=template
         )
@@ -183,6 +186,9 @@ def gerar_resposta(input_text):
 
 # Criando abas
 tab1, tab2 = st.tabs(["📰 Notícias do Mercado", "📊 Análise de Dados"])
+
+# Lidando com a interação do usuário com o chatbot
+chat_input = st.chat_input("Digite aqui!")
 
 with tab1:
     # Inicializando o histórico de mensagens
@@ -210,7 +216,7 @@ with tab1:
 with tab2:
     col1, col2 = st.columns(2)
     df = pd.read_csv(
-        r"C:\Users\sensix\Desktop\PESSOAL\PESSOAL\PORTIFOLIO DATA SCIENCE\conselho_camarada\ativos.csv"
+        r"C:\Users\sensix\Desktop\TESTE_SRICPT\TESTE_SRICPT\SCRIPT_RESUMO_CAMARADA\resumo_camarada\ativos.csv"
     )
 
     acoes = df["Valor"].unique().tolist()
@@ -381,4 +387,4 @@ with tab2:
             st.plotly_chart(fig)
 
     else:
-        st.write("Selecione as ações que você quer analisar")
+        st.write("Selecione as ações e o periodo que você quer analisar⬆️")
