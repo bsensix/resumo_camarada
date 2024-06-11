@@ -11,3 +11,4 @@ yfinance==0.2.38
 plotly==5.9.0
 beautifulsoup4==4.12.2
 Pillow==9.2.0
+faiss-cpu
