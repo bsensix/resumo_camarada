@@ -186,9 +186,10 @@ def gerar_resposta(input_text):
 
 
 # Criando abas
-tab1, tab2 = st.tabs(["📰 Notícias do Mercado", "📊 Análise de Dados"])
+tab1, tab2, tab3 = st.tabs(
+    ["📰 Notícias do Mercado", "📊 Análise de Dados", "📅 Cotação Atual"]
+)
 
-# Lidando com a interação do usuário com o chatbot
 chat_input = st.chat_input("Digite aqui!")
 
 with tab1:
@@ -213,6 +214,7 @@ with tab1:
         response = gerar_resposta(chat_input)
         st.session_state.messages.append({"role": "assistant", "content": response})
         st.chat_message("assistant").write(response)
+
 
 with tab2:
     col1, col2 = st.columns(2)
@@ -388,3 +390,73 @@ with tab2:
 
     else:
         st.write("Selecione as ações e o periodo que você quer analisar⬆️")
+
+
+with tab3:
+    col1, col2 = st.columns(2)
+    df = pd.read_csv("ativos.csv")
+
+    acoes = df["Valor"].unique().tolist()
+
+    selecao_cotacao = col1.selectbox("Selecione a ação 📈:", options=acoes)
+
+    # Função para baixar dados intraday usando yfinance
+    @st.cache_data
+    def baixar_dados_intraday(acao, interval):
+        simbolo_ativo = acao
+        if not simbolo_ativo.endswith(".SA"):
+            simbolo_ativo += ".SA"
+
+        try:
+            # Baixar os dados do ativo usando yf.download
+            stock_history = yf.download(simbolo_ativo, period="1d", interval=interval)
+
+            stock_history["Date"] = pd.to_datetime(stock_history.index)
+            return stock_history
+        except Exception as e:
+            print(f"Erro ao baixar dados para o símbolo {simbolo_ativo}: {e}")
+            return pd.DataFrame()
+
+    # Baixar os dados automaticamente ao selecionar a ação
+    if selecao_cotacao:
+        dados_cotacao = baixar_dados_intraday(selecao_cotacao, "5m")
+
+        col1, col2 = st.columns(2)
+        with col1:
+            # Criar um gráfico de linha com a evolução do preço da ação ao longo do dia
+            fig = px.line(
+                dados_cotacao,
+                x="Date",
+                y="Close",
+                title=f"Cotação Atual de {selecao_cotacao}",
+                labels={"Date": "Hora", "Close": " R$ Preço"},
+            )
+            st.plotly_chart(fig)
+
+        with col2:
+            # Criar o gráfico de candlestick
+            fig = go.Figure(
+                data=[
+                    go.Candlestick(
+                        x=dados_cotacao.index,
+                        open=dados_cotacao["Open"],
+                        high=dados_cotacao["High"],
+                        low=dados_cotacao["Low"],
+                        close=dados_cotacao["Close"],
+                        name="Candle",
+                    )
+                ]
+            )
+
+            # Adicionar título e rótulos aos eixos
+            fig.update_layout(
+                title="Gráfico de Candlestick Intraday",
+                xaxis_title="Hora",
+                yaxis_title="Preço",
+            )
+
+            # Exibir o gráfico no Streamlit
+            st.plotly_chart(fig)
+
+    else:
+        st.write("Selecione uma ação para ver a cotação atual⬆️")
