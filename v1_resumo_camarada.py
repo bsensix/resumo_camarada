@@ -34,13 +34,12 @@ def baixar_noticias():
         content = response.content
         soup = BeautifulSoup(content, "html.parser", from_encoding="utf-8")
 
-        # Encontrando todas as notícias e seus respectivos horários
+        # Encontrando todas as notícias
         news_titles = soup.find_all("h2", class_="live-title")
         news_contents = soup.find_all("div", class_="live-content")
         news_times = soup.find_all("span", class_="material-icons live-published-icon")
 
         news_text = ""
-        # Iterando sobre as notícias, horários e conteúdos e adicionando ao texto
         for title, content, time in zip(
             news_titles[:5], news_contents[:5], news_times[:5]
         ):
@@ -66,7 +65,7 @@ def ultimos_dias(periodo):
             content = response.content
             soup = BeautifulSoup(content, "html.parser", from_encoding="utf-8")
 
-            # Encontrando todas as notícias e seus respectivos horários
+            # Encontrando todas as notícias
             news_titles = soup.find_all("h2", class_="live-title")
             news_contents = soup.find_all("div", class_="live-content")
             news_times = soup.find_all(
@@ -229,7 +228,6 @@ with tab2:
         start_date = data_inicial.strftime("%Y-%m-%d")
         end_date = data_final.strftime("%Y-%m-%d")
 
-        # Lista para armazenar os dados das ações
         stock_data = []
 
         for acao in acoes:
@@ -251,7 +249,6 @@ with tab2:
             except Exception as e:
                 print(f"Erro ao baixar dados para o símbolo {simbolo_ativo}: {e}")
 
-        # Concatenar os dados das ações em um único DataFrame
         if stock_data:
             all_stock_data = pd.concat(stock_data)
             all_stock_data["Date"] = pd.to_datetime(all_stock_data.index)
@@ -262,7 +259,6 @@ with tab2:
         else:
             return pd.DataFrame()
 
-    # Criando um st.multiselect
     selecao = col1.multiselect("Selecione as ações 📈:", options=acoes)
 
     # Definindo a data inicial e final
@@ -311,7 +307,6 @@ with tab2:
                 yaxis_title="Volume de Negociações",
             )
 
-            # Exibindo o gráfico no Streamlit
             st.plotly_chart(fig)
 
         with col2:
