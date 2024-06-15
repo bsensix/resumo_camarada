@@ -3,9 +3,11 @@ Este repositório contém um script em Python que gera um painel interativo util
 
 Funcionalidades:
 
-Notícias atuais do Mercado: Baixa e forne as notícias atuais do mercado financeiro do site InfoMoney para o agente.
-Resumo dos Últimos: Dias: Baixa e exibe notícias do mercado dos últimos dias.
-Análise de Ações: Permite selecionar ações específicas e visualizar gráficos de cotação intraday e gráficos de candlestick.
+**Notícias atuais do Mercado**: Baixa e forne as notícias atuais do mercado financeiro do site InfoMoney para o agente gpt-4o.
+
+**Resumo dos Últimos**: Dias: Baixa e exibe notícias do mercado dos últimos dias.
+
+**Análise de Ações**: Permite selecionar ações específicas e visualizar gráficos de cotação intraday e gráficos de candlestick.
 
 Baixo temos o fluxograma do projeto:
 
