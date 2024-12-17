@@ -132,9 +132,7 @@ def selecionar_funcao_baixar_noticias():
 def gerar_resposta(input_text):
     news_text = selecionar_funcao_baixar_noticias()
     if news_text:
-        embeddings = OpenAIEmbeddings(
-            api_key="sk-proj-SNfISpAxf7dEa2ZnnQoPT3BlbkFJPhK3QyVHVCYBcpNrfgVP"
-        )
+        embeddings = OpenAIEmbeddings(api_key=OPEN_AI_KEY)
         # Criar um Document para o texto de notícias
         document = Document(page_content=news_text)
         documents = [document]
