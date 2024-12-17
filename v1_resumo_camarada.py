@@ -149,7 +149,7 @@ def gerar_resposta(input_text):
         llm = ChatOpenAI(
             temperature=0.45,
             model="gpt-4o",
-            api_key="sk-proj-SNfISpAxf7dEa2ZnnQoPT3BlbkFJPhK3QyVHVCYBcpNrfgVP",
+            api_key=open_ai_key,
         )
 
         template = """
