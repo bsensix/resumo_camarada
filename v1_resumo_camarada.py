@@ -132,6 +132,10 @@ def selecionar_funcao_baixar_noticias():
 # Função para gerar respostas do chatbot
 def gerar_resposta(input_text):
     open_ai_key = os.getenv("OPEN_AI_KEY")
+    if not open_ai_key:
+        raise ValueError(
+            "A chave da API OpenAI não foi encontrada. Verifique se a variável de ambiente 'OPEN_AI_KEY' está definida corretamente."
+        )
     news_text = selecionar_funcao_baixar_noticias()
     if news_text:
         embeddings = OpenAIEmbeddings(api_key=open_ai_key)
