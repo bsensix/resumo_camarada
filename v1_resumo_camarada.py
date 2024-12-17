@@ -1,4 +1,3 @@
-import os
 from datetime import date, timedelta
 
 import pandas as pd
@@ -129,9 +128,11 @@ def selecionar_funcao_baixar_noticias():
         return ultimos_dias("ultimos_7_dias")
 
 
+open_ai_key = st.secrets["general"]["OPEN_AI_KEY"]
+
+
 # Função para gerar respostas do chatbot
 def gerar_resposta(input_text):
-    open_ai_key = os.getenv("OPEN_AI_KEY")
     if not open_ai_key:
         raise ValueError(
             "A chave da API OpenAI não foi encontrada. Verifique se a variável de ambiente 'OPEN_AI_KEY' está definida corretamente."
