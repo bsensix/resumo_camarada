@@ -1,3 +1,4 @@
+import os
 from datetime import date, timedelta
 
 import pandas as pd
@@ -130,9 +131,10 @@ def selecionar_funcao_baixar_noticias():
 
 # Função para gerar respostas do chatbot
 def gerar_resposta(input_text):
+    open_ai_key = os.getenv("OPEN_AI_KEY")
     news_text = selecionar_funcao_baixar_noticias()
     if news_text:
-        embeddings = OpenAIEmbeddings(api_key=OPEN_AI_KEY)
+        embeddings = OpenAIEmbeddings(api_key=open_ai_key)
         # Criar um Document para o texto de notícias
         document = Document(page_content=news_text)
         documents = [document]
